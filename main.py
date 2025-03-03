@@ -1,6 +1,8 @@
 import streamlit as st
 import google.generativeai as genai
 
+# Access the API key from Streamlit secrets
+api_key = st.secrets["api"]["api_key"]
 
 # Configure the Generative AI API
 genai.configure(api_key=api_key)
@@ -61,23 +63,23 @@ At the end, include this disclaimer: "Please consult your healthcare provider fo
 """
 
 disease_list = [
-    'Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema', 'Effusion', 
-    'Emphysema', 'Fibrosis', 'Hernia', 'Infiltration', 'Mass', 'No Finding', 
+    'Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema', 'Effusion',
+    'Emphysema', 'Fibrosis', 'Hernia', 'Infiltration', 'Mass', 'No Finding',
     'Nodule', 'Pleural Thickening', 'Pneumonia', 'Pneumothorax'
 ]
 
-xray_system_prompt =f"""As a medical image analyst, your task is to evaluate chest X-rays 
+xray_system_prompt =f"""As a medical image analyst, your task is to evaluate chest X-rays
     for the presence of the following diseases:
     {', '.join(disease_list)}.
-    Predict the likelihood of each disease being present and provide a summary 
-    in patient-friendly language. 
+    Predict the likelihood of each disease being present and provide a summary
+    in patient-friendly language.
 
     Provide the output in the following format:
     1. **Disease Probabilities:** A ranked list of diseases with their predicted likelihoods (as percentages).
     2. **Key Findings:** Highlight the most significant abnormalities detected.
     3. **Next Steps:** Offer recommendations for further testing, consultation, or treatment if needed.
 
-    Add this disclaimer at the end: 
+    Add this disclaimer at the end:
     "These results are predictions and should not replace professional medical advice. Please consult a healthcare provider for a definitive diagnosis."
     """
 
@@ -92,9 +94,9 @@ if option == "Medical Report Summarizer":
 
     if uploaded_report_file:
         st.image(uploaded_report_file, width=300, caption="Uploaded Medical Report Image")
-    
+
     submit_button = st.button("Generate Report Summary")
-    
+
     if submit_button and uploaded_report_file:
         with st.spinner('Processing...'):
             # Prepare the image for analysis
@@ -118,9 +120,9 @@ elif option == "Chest X-Ray Analysis":
 
     if uploaded_xray_file:
         st.image(uploaded_xray_file, width=400, caption="Uploaded Chest X-Ray Image")
-    
+
     xray_submit_button = st.button("Analyze X-Ray")
-    
+
     if xray_submit_button and uploaded_xray_file:
         with st.spinner('Analyzing...'):
             # Prepare the image for analysis
@@ -136,4 +138,3 @@ elif option == "Chest X-Ray Analysis":
                 st.write(response.text)
             else:
                 st.error("Sorry, there was an error analyzing the X-ray.")
-
